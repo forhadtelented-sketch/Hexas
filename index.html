@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Scheduling App</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#" onclick="showPage('home')">HEXA'S App</a>
+      <button class="navbar-toggler" type="button" onclick="toggleMobileMenu()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto" id="mainNavLinks">
+          <li class="nav-item dropdown d-none" id="schedulingNavLink">
+            <a class="nav-link dropdown-toggle" href="#" id="schedulingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              SCHEDULING
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="schedulingDropdown">
+              <li><a class="dropdown-item" href="#" onclick="showPage('dashboard')">Dashboard</a></li>
+              <li><a class="dropdown-item" href="#" onclick="showPage('teachers')">Teachers</a></li>
+              <li><a class="dropdown-item" href="#" onclick="showPage('courses')">Courses</a></li>
+              <li><a class="dropdown-item" href="#" onclick="showPage('batches')">Batches</a></li>
+              <li><a class="dropdown-item" href="#" onclick="showPage('timeAndPlace')">Time & Place</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown d-none" id="testNavLink">
+            <a class="nav-link dropdown-toggle" href="#" id="testDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              TEST
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="testDropdown">
+              <li><a class="dropdown-item" href="#" onclick="showPage('testManagement')">Test Management</a></li>
+              <li><a class="dropdown-item" href="#" onclick="showPage('testRegister')">Test Register</a></li>
+              <li><a class="dropdown-item" href="#" onclick="showPage('testResults')">Test Results</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown d-none" id="studentInfoNavLink">
+            <a class="nav-link dropdown-toggle" href="#" id="studentInfoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              STUDENT INFO
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="studentInfoDropdown">
+              <li><a class="dropdown-item" href="#" onclick="showPage('studentRecords')">Student Records</a></li>
+              <li><a class="dropdown-item" href="#" onclick="showPage('attendance')">Attendance</a></li>
+              <li><a class="dropdown-item" href="#" onclick="showPage('performance')">Performance</a></li>
+            </ul>
+          </li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item" id="loginNavItem">
+                <a class="nav-link" href="#" id="loginLink" onclick="showPage('loginPage')">Login</a>
+            </li>
+            <li class="nav-item d-none" id="logoutNavItem">
+                <a class="nav-link" href="#" id="logoutLink" onclick="logoutUser()">Logout</a>
+            </li>
+            <li class="nav-item d-none" id="dashboardNavItem">
+                <a class="nav-link" href="#" id="dashboardLink" onclick="goToDashboard()">Dashboard</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div id="alertContainer" class="alert-position"></div>
+
+  <div id="mainContent" class="main-content">
+    <div id="loginPage" class="page-content">
+      <div class="login-container">
+        <h2 class="mb-4">Login to HEXA'S App</h2>
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username" placeholder="Enter username">
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" placeholder="Password">
+        </div>
+        <div class="mb-4">
+          <label for="roleSelect" class="form-label">Select Role</label>
+          <select class="form-select" id="roleSelect">
+            <option value="admin">Admin</option>
+            <option value="teacher">Teacher</option>
+            <option value="student">Student</option>
+          </select>
+        </div>
+        <div class="d-grid">
+          <button type="submit" class="btn btn-login" onclick="loginUser()">Login</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="home" class="page-content d-none">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="card-title text-center text-primary">Welcome to HEXA'S App</h2>
+          <p class="card-text text-center lead">Your comprehensive solution for managing teachers, courses, and student schedules efficiently.</p>
+          <hr class="my-4">
+          <div class="row">
+            <div class="col-md-4">
+              <h5 class="text-secondary">Effortless Scheduling</h5>
+              <p>Streamline your class scheduling, teacher assignments, and room allocations with our intuitive tools.</p>
+            </div>
+            <div class="col-md-4">
+              <h5 class="text-secondary">Integrated Test Management</h5>
+              <p>Manage mock tests, individual modules, and track student registrations and results seamlessly.</p>
+            </div>
+            <div class="col-md-4">
+              <h5 class="text-secondary">Comprehensive Student Info</h5>
+              <p>Keep detailed records of students, monitor attendance, and track performance with ease.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="adminDashboard" class="page-content d-none">
+        <div class="card mb-4">
+            <div class="card-header">Admin Dashboard</div>
+            <div class="card-body">
+                <h4 class="card-title">Welcome, Admin!</h4>
+                <p class="card-text">From here, you can manage users, teachers, courses, batches, and system configurations.</p>
+                <div class="row mt-4">
+                    <div class="col-md-4 mb-3">
+                        <button class="btn btn-primary w-100" onclick="showPage('teachers')">Manage Teachers</button>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <button class="btn btn-info w-100" onclick="showPage('batches')">Manage Batches</button>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <button class="btn btn-success w-100" onclick="showPage('courses')">Manage Courses</button>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <button class="btn btn-warning w-100" onclick="showPage('timeAndPlace')">Manage Time & Rooms</button>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <button class="btn btn-danger w-100" onclick="showPage('testManagement')">Manage Test Slots</button>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <button class="btn btn-secondary w-100" onclick="showPage('studentRecords')">View Student Records</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="teacherDashboard" class="page-content d-none">
+        <div class="card mb-4">
+            <div class="card-header">Teacher Dashboard</div>
+            <div class="card-body">
+                <h4 class="card-title">Welcome, Teacher!</h4>
+                <p class="card-text">Here you can view your assigned classes, manage student attendance, and submit grades.</p>
+                <div class="row mt-4">
+                    <div class="col-md-6 mb-3">
+                        <button class="btn btn-primary w-100" onclick="showPage('dashboard')">View My Schedule</button>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <button class="btn btn-info w-100" onclick="showPage('attendance')">Mark Attendance</button>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <button class="btn btn-success w-100" onclick="showPage('testResults')">Enter Test Results</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="studentDashboard" class="page-content d-none">
+        <div class="card mb-4">
+            <div class="card-header">Student Dashboard</div>
+            <div class="card-body">
+                <h4 class="card-title">Welcome, Student!</h4>
+                <p class="card-text">Access your class schedule, view test results, and track your performance.</p>
+                <div class="row mt-4">
+                    <div class="col-md-6 mb-3">
+                        <button class="btn btn-primary w-100" onclick="showPage('dashboard')">View My Schedule</button>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <button class="btn btn-info w-100" onclick="showPage('testResults')">View Test Results</button>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <button class="btn btn-success w-100" onclick="showPage('performance')">Check Performance</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="scheduling" class="page-content d-none">
+      <div class="card">
+        <div class="card-body">
+          <h3>Scheduling Section</h3>
+          <p>Use the dropdown menu to navigate between scheduling features.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="dashboard" class="page-content d-none">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3>Dashboard</h3>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Day:</label>
+              <select id="filterDay" class="form-select">
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+              </select>
+            </div>
+          </div>
+          <button onclick="loadDashboard()" class="btn btn-primary">Show Schedule</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h4>Availability for <span id="dashboardSelectedDay"></span></h4>
+          <div id="dashboardContent">
+            <div class="alert alert-info text-center">Select a day and click "Show Schedule" to view availability.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="teachers" class="page-content d-none">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3>Manage Teachers</h3>
+          <div class="mb-3">
+            <label class="form-label">Name:</label>
+            <input id="teacherName" class="form-control" placeholder="Full Name">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Phone:</label>
+            <input id="teacherPhone" class="form-control" placeholder="Phone Number">
+          </div>
+          <button onclick="addTeacher()" class="btn btn-success" id="addTeacherBtn">Add Teacher</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h4>Teacher List</h4>
+          <ul id="teacherList" class="list-group"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="courses" class="page-content d-none">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3>Manage Courses</h3>
+          <div class="mb-3">
+            <label class="form-label">Course Name:</label>
+            <input id="courseName" class="form-control" placeholder="Course Name">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description:</label>
+            <textarea id="courseDesc" class="form-control" placeholder="Description"></textarea>
+          </div>
+          <button onclick="addCourse()" class="btn btn-primary" id="addCourseBtn">Add Course</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h4>Course List</h4>
+          <ul id="courseList" class="list-group"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="timeAndPlace" class="page-content d-none">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h3>Timeframes</h3>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label">Start Time:</label>
+                  <input type="time" id="timeframeStart" class="form-control" step="900">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">End Time:</label>
+                  <input type="time" id="timeframeEnd" class="form-control" step="900">
+                </div>
+              </div>
+              <button onclick="addTimeframe()" class="btn btn-info">Add Timeframe</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <h4>Timeframe List</h4>
+              <ul id="timeframeList" class="list-group"></ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h3>Rooms</h3>
+              <div class="mb-3">
+                <input id="newRoom" class="form-control" placeholder="Room Number">
+              </div>
+              <button onclick="addRoom()" class="btn btn-info">Add Room</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <h4>Room List</h4>
+              <ul id="roomList" class="list-group"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="batches" class="page-content d-none">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3>Batch Management</h3>
+          <div id="conflictAlert" class="alert alert-warning d-none"></div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Course:</label>
+              <select id="batchCourse" class="form-select"></select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Timeframe:</label>
+              <select id="batchTimeframe" class="form-select"></select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Room:</label>
+              <select id="batchRoom" class="form-select"></select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Batch Number:</label>
+              <input id="batchNumber" class="form-control" placeholder="Batch #">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Days:</label>
+            <div id="daysCheckboxes">
+              <label class="me-2"><input type="checkbox" value="Monday" onchange="updateSelectedDays()"> Monday</label>
+              <label class="me-2"><input type="checkbox" value="Tuesday" onchange="updateSelectedDays()"> Tuesday</label>
+              <label class="me-2"><input type="checkbox" value="Wednesday" onchange="updateSelectedDays()"> Wednesday</label>
+              <label class="me-2"><input type="checkbox" value="Thursday" onchange="updateSelectedDays()"> Thursday</label>
+              <label class="me-2"><input type="checkbox" value="Friday" onchange="updateSelectedDays()"> Friday</label>
+              <label class="me-2"><input type="checkbox" value="Saturday" onchange="updateSelectedDays()"> Saturday</label>
+              <label class="me-2"><input type="checkbox" value="Sunday" onchange="updateSelectedDays()"> Sunday</label>
+            </div>
+            <div id="selectedDays" class="selected-days"></div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Teachers:</label>
+            <div class="dropdown-teachers">
+              <button id="teacherDropdownBtn" class="btn btn-outline-secondary dropdown-toggle w-100" type="button" onclick="toggleTeacherDropdown(event)"> Select Teachers </button>
+              <div id="teacherDropdownContent" class="dropdown-content"></div>
+            </div>
+            <div id="selectedTeachers" class="selected-teachers"></div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Status:</label>
+            <label class="switch">
+              <input type="checkbox" id="batchActive" checked>
+              <span class="slider"></span>
+            </label>
+            <span id="batchStatusText">Active</span>
+          </div>
+          <button onclick="addOrUpdateBatch()" class="btn btn-warning" id="batchActionButton"> Create Batch </button>
+          <button onclick="resetBatchForm()" class="btn btn-secondary">Cancel</button>
+          <input type="hidden" id="editingBatchId">
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h4>Batch List</h4>
+          <ul id="batchList" class="list-group"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="test" class="page-content d-none">
+      <div class="card">
+        <div class="card-body">
+          <h3>Test Section</h3>
+          <p>Use the dropdown menu to navigate between test features.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="testManagement" class="page-content d-none">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3>Test Management</h3>
+          <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" id="testManagementTabs" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="mockTestTab" data-bs-toggle="tab" href="#mockTest" role="tab" aria-controls="mockTest" aria-selected="true" onclick="showMockTest()">Mock Test Setup</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="speakingTestTab" data-bs-toggle="tab" href="#speakingTest" role="tab" aria-controls="speakingTest" aria-selected="false" onclick="showSpeakingTest()">Speaking Test Management</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="individualModuleTab" data-bs-toggle="tab" href="#individualModuleTest" role="tab" aria-controls="individualModuleTest" aria-selected="false" onclick="showIndividualModuleTest()">Individual Module Test Setup</a>
+              </li>
+            </ul>
+          </div>
+          <div class="tab-content mt-3">
+            <div class="tab-pane fade show active" id="mockTest" role="tabpanel" aria-labelledby="mockTestTab">
+  <h4>Mock Test Details</h4>
+  <form id="mockTestForm">
+    <div class="mb-3">
+      <label for="mockTestDate" class="form-label">Date (Listening, Reading, Writing):</label>
+      <input type="date" id="mockTestDate" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="mockTestTime" class="form-label">Time (Listening, Reading, Writing):</label>
+      <input type="time" id="mockTestTime" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="mockTestSpeakingBatchSelect" class="form-label">Select Speaking Batch:</label>
+      <select id="mockTestSpeakingBatchSelect" class="form-select">
+        <option value="">-- Select a speaking batch for this mock test --</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="mockTotalSeats" class="form-label">Total Seats:</label>
+      <input type="number" id="mockTotalSeats" class="form-control" placeholder="Number of seats">
+    </div>
+  </form>
+  <button onclick="createMockTest()" class="btn btn-primary">Create Mock Test</button>
+  <div id="mockTestSlotsList" class="mt-4"></div>
+</div>
+            
+
+ <div class="tab-pane fade" id="speakingTest" role="tabpanel" aria-labelledby="speakingTestTab">
+  <h4>Speaking Test Day Setup</h4>
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="speakingTestDate" class="form-label">Test Date:</label>
+      <input type="date" id="speakingTestDate" class="form-control">
+    </div>
+    <div class="col-md-6 d-flex align-items-end mb-3">
+        <button onclick="generateSpeakingSlots()" class="btn btn-info w-100">Generate Time Slots for the Day</button>
+    </div>
+  </div>
+
+  <hr>
+  <h5>Available Time Slots (9:00 AM - 7:00 PM)</h5>
+  <p class="text-muted small">Click the '×' to remove a slot before creating the schedule.</p>
+  <ul id="speakingTimeSlotsContainer" class="mb-3">
+    <li class="text-center p-3">Click "Generate Time Slots" to see the list.</li>
+  </ul>
+
+ <div class="d-grid gap-2">
+    <button class="btn btn-success" onclick="createAllSpeakingSlots()">Create Slots</button>
+</div>
+
+<hr class="my-4">
+
+<h4>Created Speaking Slot Batches</h4>
+<p class="text-muted small">Here you can see all the speaking slots you've created, grouped by batch. You can delete an entire batch at once.</p>
+<div id="speakingSlotBatchesContainer" class="list-group mt-3">
+    </div>
+</div>
+            <div class="tab-pane fade" id="individualModuleTest" role="tabpanel" aria-labelledby="individualModuleTab">
+                <h4>Individual Module Test Setup</h4>
+                <div class="accordion" id="individualModuleAccordion">
+            
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingListening">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseListening" aria-expanded="false" aria-controls="collapseListening">
+                                Listening Test Setup
+                            </button>
+                        </h2>
+                        <div id="collapseListening" class="accordion-collapse collapse" aria-labelledby="headingListening" data-bs-parent="#individualModuleAccordion">
+                            <div class="accordion-body">
+                                <form id="listeningForm" onsubmit="createLRW_Test('listening', event)">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3"><label for="listeningTestDate" class="form-label">Date:</label><input type="date" id="listeningTestDate" class="form-control"></div>
+                                        <div class="col-md-6 mb-3"><label for="listeningTestTime" class="form-label">Time:</label><input type="time" id="listeningTestTime" class="form-control"></div>
+                                        <div class="col-md-6 mb-3"><label for="listeningTestRoom" class="form-label">Room:</label><select id="listeningTestRoom" class="form-select"></select></div>
+                                        <div class="col-md-6 mb-3"><label for="listeningTestTeacher" class="form-label">Teacher:</label><select id="listeningTestTeacher" class="form-select"></select></div>
+                                        <div class="col-md-6 mb-3"><label for="listeningTotalSeats" class="form-label">Total Seats:</label><input type="number" id="listeningTotalSeats" class="form-control" placeholder="Number of seats"></div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Create Listening Slot</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingReading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReading" aria-expanded="false" aria-controls="collapseReading">
+                                Reading Test Setup
+                            </button>
+                        </h2>
+                        <div id="collapseReading" class="accordion-collapse collapse" aria-labelledby="headingReading" data-bs-parent="#individualModuleAccordion">
+                            <div class="accordion-body">
+                                <form id="readingForm" onsubmit="createLRW_Test('reading', event)">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3"><label for="readingTestDate" class="form-label">Date:</label><input type="date" id="readingTestDate" class="form-control"></div>
+                                        <div class="col-md-6 mb-3"><label for="readingTestTime" class="form-label">Time:</label><input type="time" id="readingTestTime" class="form-control"></div>
+                                        <div class="col-md-6 mb-3"><label for="readingTestRoom" class="form-label">Room:</label><select id="readingTestRoom" class="form-select"></select></div>
+                                        <div class="col-md-6 mb-3"><label for="readingTestTeacher" class="form-label">Teacher:</label><select id="readingTestTeacher" class="form-select"></select></div>
+                                        <div class="col-md-6 mb-3"><label for="readingTotalSeats" class="form-label">Total Seats:</label><input type="number" id="readingTotalSeats" class="form-control" placeholder="Number of seats"></div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Create Reading Slot</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingWriting">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWriting" aria-expanded="false" aria-controls="collapseWriting">
+                                Writing Test Setup
+                            </button>
+                        </h2>
+                        <div id="collapseWriting" class="accordion-collapse collapse" aria-labelledby="headingWriting" data-bs-parent="#individualModuleAccordion">
+                            <div class="accordion-body">
+                                <form id="writingForm" onsubmit="createLRW_Test('writing', event)">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3"><label for="writingTestDate" class="form-label">Date:</label><input type="date" id="writingTestDate" class="form-control"></div>
+                                        <div class="col-md-6 mb-3"><label for="writingTestTime" class="form-label">Time:</label><input type="time" id="writingTestTime" class="form-control"></div>
+                                        <div class="col-md-6 mb-3"><label for="writingTestRoom" class="form-label">Room:</label><select id="writingTestRoom" class="form-select"></select></div>
+                                        <div class="col-md-6 mb-3"><label for="writingTestTeacher" class="form-label">Teacher:</label><select id="writingTestTeacher" class="form-select"></select></div>
+                                        <div class="col-md-6 mb-3"><label for="writingTotalSeats" class="form-label">Total Seats:</label><input type="number" id="writingTotalSeats" class="form-control" placeholder="Number of seats"></div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Create Writing Slot</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingSpeaking">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSpeaking" aria-expanded="false" aria-controls="collapseSpeaking">
+                                Speaking Test Publishing
+                            </button>
+                        </h2>
+                        <div id="collapseSpeaking" class="accordion-collapse collapse" aria-labelledby="headingSpeaking" data-bs-parent="#individualModuleAccordion">
+                            <div class="accordion-body">
+                                <p class="text-muted">Below are the speaking slot batches created in the 'Speaking Test Management' tab and assigned for 'Individual Tests'. Publish a batch to make its slots available for student registration.</p>
+                                <div id="individualSpeakingBatchesContainer" class="list-group mt-3">
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+   
+    <div id="testResults" class="page-content d-none">
+      <div class="card">
+        <div class="card-body">
+          <h3>Test Results</h3>
+          <p>This section will contain test results.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="testRegister" class="page-content d-none">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3>Test Registration</h3>
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4" id="testTypeCardsContainer">
+            <div class="col">
+              <div class="card test-type-card h-100" id="mockTestRegisterCard">
+                <div class="card-header">Mock Test</div>
+                <div class="card-body">
+                  <p class="card-text">Full IELTS Mock Test (Listening, Reading, Writing, Speaking).</p>
+                  <div id="mockTestSlots" class="test-slots-list mt-3">
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card test-type-card h-100" id="partialTestRegisterCard">
+                <div class="card-header">Individual Module Test</div>
+                <div class="card-body">
+                  <p class="card-text">Register for a specific module (Listening, Reading, Writing, Speaking).</p>
+                  <div class="mb-3">
+                    <label class="form-label">Select Module:</label>
+                    <select id="registerModuleSelect" class="form-select" onchange="loadTestSlots('partial')">
+                      <option value="">-- Select --</option>
+                      <option value="listening">Listening</option>
+                      <option value="reading">Reading</option>
+                      <option value="writing">Writing</option>
+                      <option value="speaking">Speaking</option>
+                    </select>
+                  </div>
+                  <div id="partialTestSlots" class="test-slots-list mt-3">
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="registrationFormCard" class="card mt-4 d-none">
+            <div class="card-header">Register for Selected Test Slot</div>
+            <div class="card-body">
+              <p>You are registering for: <strong id="selectedTestInfo"></strong></p>
+              <div class="mb-3">
+                <label for="studentNameRegister" class="form-label">Student Name:</label>
+                <input type="text" class="form-control" id="studentNameRegister" placeholder="Enter student name">
+              </div>
+              <div class="mb-3">
+                <label for="studentPhoneRegister" class="form-label">Student Phone:</label>
+                <input type="text" class="form-control" id="studentPhoneRegister" placeholder="Enter student phone">
+              </div>
+              <button onclick="registerStudentForTest()" class="btn btn-success">Confirm Registration</button>
+              <button onclick="hideRegistrationForm()" class="btn btn-secondary">Cancel</button>
+              <input type="hidden" id="selectedSlotId">
+              <input type="hidden" id="selectedTestType">
+            </div>
+          </div>
+
+          <div class="card mt-4">
+            <div class="card-header">Current Test Registrations</div>
+            <div class="card-body">
+              <div id="testRegistrationsList">
+                <p class="text-muted">No registrations yet.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div id="studentInfo" class="page-content d-none">
+      <div class="card">
+        <div class="card-body">
+          <h3>Student Info Section</h3>
+          <p>Use the dropdown menu to navigate between student features.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="studentRecords" class="page-content d-none">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3>Student Records</h3>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="studentName" class="form-label">Student Name:</label>
+              <input type="text" class="form-control" id="studentName" placeholder="Enter student name">
+            </div>
+            <div class="col-md-6">
+              <label for="studentPhone" class="form-label">Phone Number:</label>
+              <input type="text" class="form-control" id="studentPhone" placeholder="Enter phone number">
+            </div>
+          </div>
+          <button onclick="addStudent()" class="btn btn-success">Add Student</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h4>Student List</h4>
+          <div class="mb-3">
+            <input type="text" class="form-control" id="searchStudent" onkeyup="searchStudents()" placeholder="Search students by name or phone...">
+          </div>
+          <ul id="studentList" class="list-group"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="attendance" class="page-content d-none">
+      <div class="card">
+        <div class="card-body">
+          <h3>Attendance</h3>
+          <p>This section will allow marking and viewing attendance.</p>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Select Date:</label>
+              <input type="date" id="attendanceDate" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Select Batch:</label>
+              <select id="attendanceBatch" class="form-select"></select>
+            </div>
+          </div>
+          <button onclick="loadAttendance()" class="btn btn-primary">Load Attendance</button>
+          <div id="attendanceList" class="mt-4"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="performance" class="page-content d-none">
+      <div class="card">
+        <div class="card-body">
+          <h3>Performance</h3>
+          <p>This section will track student performance.</p>
+          <div class="mb-3">
+            <label for="performanceStudentSelect" class="form-label">Select Student:</label>
+            <select id="performanceStudentSelect" class="form-select"></select>
+          </div>
+          <button onclick="loadPerformance()" class="btn btn-primary">Load Performance</button>
+          <div id="performanceContent" class="mt-4"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
